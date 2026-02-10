@@ -1,4 +1,10 @@
-output/
+# Scratch / transient outputs
+output/scratch/
+output/tmp/
+
+# Logs (optional: ignore or selectively commit)
+output/logs/*.log
+
 __pycache__/
 .DS_Store
 
