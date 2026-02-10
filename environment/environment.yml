@@ -1,0 +1,22 @@
+name: wu2018
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - statsmodels
+  - matplotlib
+  - seaborn
+  - tqdm
+  - regex
+  - pyyaml
+  - jupyter
+  - ipykernel
+  # Optional but useful for text preprocessing
+  - nltk
+  - pip:
+      - pyarrow

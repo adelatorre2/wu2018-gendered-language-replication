@@ -1,0 +1,5 @@
+output/
+data/raw/
+data/derived/
+__pycache__/
+.DS_Store
