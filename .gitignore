@@ -1,5 +1,12 @@
 output/
-data/raw/
-data/derived/
 __pycache__/
 .DS_Store
+
+# LaTeX auxiliary / build files
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
