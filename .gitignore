@@ -16,3 +16,6 @@ __pycache__/
 *.synctex.gz
 *.fls
 *.fdb_latexmk
+
+# Ignore the big EMJR dataset (b/c over 100mb)
+references/openicpsr_wu2018_replication-pkg/gendered_posts.csv
