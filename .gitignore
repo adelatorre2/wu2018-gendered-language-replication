@@ -18,4 +18,15 @@ __pycache__/
 *.fdb_latexmk
 
 # Ignore the big EMJR dataset (b/c over 100mb)
-references/openicpsr_wu2018_replication-pkg/gendered_posts.csv
+data/raw/openicpsr_wu2018_replication-pkg/gendered_posts.csv
+# Upstream-generated intermediates (keep raw package clean)
+data/raw/openicpsr_wu2018_replication-pkg/i_keep_columns.txt
+data/raw/openicpsr_wu2018_replication-pkg/coef_lasso_logit_full.txt
+data/raw/openicpsr_wu2018_replication-pkg/coef_lasso_logit_pronoun.txt
+data/raw/openicpsr_wu2018_replication-pkg/coef_lasso_linear_pronoun.txt
+data/raw/openicpsr_wu2018_replication-pkg/ypred_*.txt
+data/raw/openicpsr_wu2018_replication-pkg/ypred_pronoun_*.txt
+data/raw/openicpsr_wu2018_replication-pkg/linear_ypred_*.txt
+
+# macOS metadata
+.DS_Store
