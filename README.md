@@ -37,3 +37,26 @@ Upstream scripts required minor compatibility fixes for modern pandas and NumPy.
 - `np.load(..., allow_pickle=True)` for legacy `.npz` sparse matrices
 
 See `references/manifest_openicpsr.md` for details.
+
+
+## Citation
+
+If you use this code or refer to this replication, please cite the original paper:
+
+**Economics-style (APA):**  
+Wu, A. H. (2018). *Gendered language on the Economics Job Market Rumors forum*. AEA Papers and Proceedings, 108, 175–179. https://doi.org/10.1257/pandp.20181101
+
+**BibTeX:**
+```bibtex
+@article{wuGenderedLanguageEconomics2018,
+  title = {Gendered Language on the Economics Job Market Rumors Forum},
+  author = {Wu, Alice H.},
+  journal = {AEA Papers and Proceedings},
+  volume = {108},
+  pages = {175--179},
+  year = {2018},
+  month = {may},
+  doi = {10.1257/pandp.20181101},
+  url = {https://doi.org/10.1257/pandp.20181101}
+}
+```
