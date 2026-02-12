@@ -21,7 +21,7 @@ i_test1=np.where((keys_merged['fem_pronoun']>0) & (keys_merged['male_pronoun']>0
 y_train=keys_merged.loc[i_train[0],'female_pronoun'].to_numpy() 
 
 ### (2) Bring in word count matrix X
-word_counts=np.load(dir_data+"X_word_count.npz",encoding='latin1')
+word_counts=np.load(dir_data+"X_word_count.npz",encoding='latin1',allow_pickle=True)
 X=word_counts['X'][()] 
 X_train=X[i_train[0],:]
 X_test0=X[i_test0[0],:]

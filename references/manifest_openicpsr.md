@@ -72,3 +72,4 @@ Saved into this repo (via wrapper in `src/run_all.py`):
 
 ## Local compatibility patch
 - Patched deprecated pandas `as_matrix()` calls to `to_numpy()` in the upstream Lasso scripts for compatibility only; analysis logic is unchanged.
+- Patched numpy `np.load(..., allow_pickle=True)` for compatibility with modern numpy versions; analysis logic unchanged.
