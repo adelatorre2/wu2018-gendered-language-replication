@@ -1,0 +1,64 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\usepackage{graphicx}
+
+\title[Wu 2018 Replication]{Replication of Wu (2018): Gendered Language on EJMR}
+\author[A. De La Torre]{Alejandro De La Torre}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Paper overview}
+\begin{itemize}
+  \item Question: How are women and men discussed on EJMR, and do the words differ systematically?
+  \item Approach: Lasso logistic models on word counts to identify gendered language.
+  \item Replication targets: Table 1, Table 2, Figure 1 from Wu (2018).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Replication pipeline}
+\small
+\begin{itemize}
+  \item Data: OpenICPSR package in
+  \texttt{data/raw/openicpsr\_wu2018\_replication-pkg/}.
+  \item Command: \texttt{python src/run\_all.py}.
+  \item Outputs:
+  \texttt{output/figures/figure1.pdf},
+  \texttt{output/tables/table1.csv},
+  \texttt{output/tables/table2.csv}, and Lasso intermediates.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Obstacles and fixes}
+\begin{itemize}
+  \item Pandas deprecation: replaced \texttt{as\_matrix()} with \texttt{to\_numpy()}.
+  \item NumPy security change: added \texttt{allow\_pickle=True} to \texttt{np.load(...)}.
+  \item These changes restore compatibility only; analysis logic unchanged.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Results snapshot}
+\centering
+\includegraphics[width=0.65\linewidth]{../../output/figures/figure1.pdf}
+\end{frame}
+
+\begin{frame}{Modest extension}
+\begin{itemize}
+  \item Compared overlap of top 50 female- and male-associated words between full and pronoun samples.
+  \item Overlap counts: 29 (female-associated) and 18 (male-associated).
+  \item Interpretation: core signals are stable across labeling schemes, but not identical.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusion and next steps}
+\begin{itemize}
+  \item Replication targets were reproduced with a single-command pipeline.
+  \item Next step: implement an alternative NLP model for Table 1 (assignment extension requirement).
+\end{itemize}
+\end{frame}
+
+\end{document}

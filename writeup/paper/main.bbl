@@ -1,0 +1,20 @@
+\begin{thebibliography}{2}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Wu(2018{\natexlab{a}})]{wu2018gendered}
+Alice~H. Wu.
+\newblock Gendered language on the economics job market rumors forum.
+\newblock \emph{AEA Papers and Proceedings}, 108:\penalty0 175--179, 2018{\natexlab{a}}.
+\newblock \doi{10.1257/pandp.20181101}.
+
+\bibitem[Wu(2018{\natexlab{b}})]{wu2018openicpsr}
+Alice~H. Wu.
+\newblock Replication data for: Gendered language on the economics job market rumors forum.
+\newblock OpenICPSR, 2018{\natexlab{b}}.
+\newblock URL \url{https://www.openicpsr.org/openicpsr/project/114486/version/V1/view}.
+
+\end{thebibliography}

@@ -1,0 +1,3 @@
+group,n,overlap,union,jaccard,examples
+Female-associated (pos.),50,29,71,0.408,"attractive, beautiful, blonde, breast"
+Male-associated (neg.),50,18,82,0.22,"adviser, blog, bowl, cuny"

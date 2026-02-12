@@ -1,0 +1,82 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage{float}
+\hypersetup{hidelinks,hypertexnames=false}
+
+\title{Replication of Wu (2018): Gendered Language on the Economics Job Market Rumors Forum}
+\author{Alejandro De La Torre}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Introduction and motivation}
+Wu (2018) analyzes how women and men are described on the Economics Job Market Rumors (EJMR) forum using a Lasso logistic model to identify words most predictive of female- versus male-referenced posts \citep{wu2018gendered}. The paper documents a pattern of female-associated language that is disproportionately about appearance and personal information, while male-associated language is more professional in tone. Replicating this result matters because it tests whether the pattern is robust in a large, noisy, anonymous forum. Replication materials and code for this project are public, and I make my full pipeline and outputs available in a GitHub repository.\footnote{\url{https://github.com/adelatorre2/wu2018-gendered-language-replication}}
+
+\section{Data and replication package}
+The OpenICPSR replication package provides the raw EJMR post-level dataset, a 10,000-word vocabulary, a sparse word-count matrix, and the upstream Python and R scripts used to generate the tables and figure in the paper \citep{wu2018openicpsr}. The paper reports 2,217,046 scraped posts from October 2013 to October 2017 and 444,810 gendered posts identified by gender classifiers \citep{wu2018gendered}. The package includes:
+\begin{itemize}
+\item \texttt{gendered\_posts.csv} with post text, gender labels, and training/test splits.
+\item \texttt{X\_word\_count.npz}, a sparse matrix of word counts for the top 10,000 words.
+\item \texttt{vocab10K.csv} with the vocabulary and model outputs.
+\item \texttt{trend\_stats.csv} used for Figure 1.
+\end{itemize}
+
+\section{Replication procedure}
+I built a single-command pipeline that runs the upstream Python Lasso scripts and then the upstream R script to recreate the tables and figure. The pipeline is executed with:
+\begin{quote}
+\texttt{python src/run\_all.py}
+\end{quote}
+
+The script runs the two Lasso logit programs in the raw package directory so the relative paths resolve correctly, then captures intermediates and logs. The Lasso scripts print the matrix shapes; for the full sample, the logged shapes are (300,788 $\times$ 9,540) for training, (99,941 $\times$ 9,540) for the held-out test set, and (44,081 $\times$ 9,540) for posts containing both genders. The pronoun sample logs analogous sizes of (139,299 $\times$ 9,540), (46,502 $\times$ 9,540), and (9,574 $\times$ 9,540). The R step uses \texttt{tables-figures.R} to produce Table 1, Table 2, and Figure 1 as CSV/PDF outputs.
+
+All runs were executed on macOS arm64 under the conda environment \texttt{wu2018} with Python 3.11 and R + ggplot2. Detailed logs are saved in \texttt{output/logs/}.
+
+\section{Results}
+Table \ref{tab:table1} and Table \ref{tab:table2} reproduce the top 10 words most predictive of female- and male-referenced posts in the full and pronoun samples, respectively. The qualitative pattern matches the paper: female-associated words emphasize appearance or personal attributes, while male-associated words emphasize professional status or roles. Figure \ref{fig:figure1} reproduces the monthly fraction of posts containing top gendered words, mirroring the paper's trend plot.
+
+\begin{table}[H]
+\centering
+\input{tables/table1.tex}
+\caption{Top 10 words most predictive of female- and male-referenced posts (full sample).}
+\label{tab:table1}
+\end{table}
+
+\begin{table}[H]
+\centering
+\input{tables/table2.tex}
+\caption{Top 10 words most predictive of female- and male-referenced posts (pronoun sample).}
+\label{tab:table2}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{../../output/figures/figure1.pdf}
+\caption{Fraction of female and male posts containing any of the top 50 gendered words.}
+\label{fig:figure1}
+\end{figure}
+
+\section{Modest extension: overlap across samples}
+As a small extension, I compare overlap in the top 50 positive (female-associated) and top 50 negative (male-associated) coefficients between the full-sample and pronoun-sample Lasso models. Table \ref{tab:overlap} reports overlap counts and Jaccard similarity. The overlap is moderate: 29 of 50 female-associated words and 18 of 50 male-associated words appear in both lists, suggesting that the strongest signals are fairly stable across labeling schemes while still leaving room for sampling variation.
+
+\begin{table}[H]
+\centering
+\input{tables/table_overlap.tex}
+\caption{Overlap of top 50 words between full-sample and pronoun-sample Lasso models.}
+\label{tab:overlap}
+\end{table}
+
+\section{Obstacles and fixes}
+Two compatibility issues required small, non-substantive patches to the upstream code. First, deprecated pandas \texttt{as\_matrix()} calls were replaced with \texttt{to\_numpy()}. Second, NumPy's default behavior now blocks loading pickled objects in \texttt{np.load}, so I added \texttt{allow\_pickle=True} when reading the sparse word-count matrix. These changes only restore compatibility with modern libraries; the analysis logic is unchanged.
+
+\section{Conclusion}
+The replication successfully reproduces Table 1, Table 2, and Figure 1 from Wu (2018) using the OpenICPSR package and a single-command pipeline. The extension indicates a nontrivial overlap in the most predictive words across labeling schemes, reinforcing the qualitative pattern of gendered language on EJMR. Future work could implement the assignment's alternative model requirement (e.g., random forest or linear probability model) within the same pipeline.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
