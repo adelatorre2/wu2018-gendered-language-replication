@@ -1,6 +1,12 @@
 \documentclass{beamer}
 \usetheme{Madrid}
 \usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{xcolor}
+\usepackage{tikz}
+\definecolor{maleBlue}{RGB}{44,123,182}
+\definecolor{femalePink}{RGB}{214,96,173}
 
 \title[Wu 2018 Replication]{Replication of Wu (2018): Gendered Language on EJMR}
 \author[A. De La Torre]{Alejandro De La Torre}
@@ -33,6 +39,19 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Why do the numbers match exactly?}
+\begin{itemize}
+  \item We used the exact same OpenICPSR dataset as Wu (2018).
+  \item We did not modify any preprocessing steps.
+  \item The same train/test splits were used as in the original code.
+  \item The model specification (Lasso logit) and hyperparameters were unchanged.
+  \item The original random seed was preserved.
+\end{itemize}
+\medskip
+\small
+Because the original replication code was run on the same data with identical settings, we expect the coefficient estimates and marginal effects to match exactly (up to rounding).
+\end{frame}
+
 \begin{frame}{Obstacles and fixes}
 \begin{itemize}
   \item Pandas deprecation: replaced \texttt{as\_matrix()} with \texttt{to\_numpy()}.
@@ -41,23 +60,60 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Results snapshot}
+\begin{frame}{Results: Table 1 (full sample)}
 \centering
-\includegraphics[width=0.65\linewidth]{../../output/figures/figure1.pdf}
+\scriptsize
+\begin{adjustbox}{max width=0.95\linewidth}
+\input{../paper/tables/table1.tex}
+\end{adjustbox}
+\medskip
+\footnotesize
+\vspace{0.1em}
+\textit{\\
+Note: Results exactly match Wu (2018) up to rounding, as expected when running the original replication code on the same dataset.}
 \end{frame}
 
-\begin{frame}{Modest extension}
-\begin{itemize}
-  \item Compared overlap of top 50 female- and male-associated words between full and pronoun samples.
-  \item Overlap counts: 29 (female-associated) and 18 (male-associated).
-  \item Interpretation: core signals are stable across labeling schemes, but not identical.
-\end{itemize}
+\begin{frame}{Results: Table 2 (pronoun sample)}
+\centering
+\scriptsize
+\begin{adjustbox}{max width=0.95\linewidth}
+\input{../paper/tables/table2.tex}
+\end{adjustbox}
+\medskip
+\vspace{0.1em}
+\textit{\\
+Note: Also matches!}
+\end{frame}
+
+\begin{frame}{Results: Figure 1}
+\centering
+% Use height (not width) so the full figure fits comfortably on the slide.
+\includegraphics[height=0.72\textheight,keepaspectratio]{../../output/figures/figure1.pdf}
+
+\vspace{0.15em}
+\tiny
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{0.9}
+\begin{tabular}{@{}ll\hspace{0.8em}ll@{}}
+  \begin{tikzpicture}[baseline=-0.4ex]
+    \draw[maleBlue, thick] (0,0) -- (0.55,0);
+  \end{tikzpicture} & Male (all classified posts)
+  & \begin{tikzpicture}[baseline=-0.4ex]
+    \draw[femalePink, thick] (0,0) -- (0.55,0);
+  \end{tikzpicture} & Female (all classified posts) \\
+  \begin{tikzpicture}[baseline=-0.4ex]
+    \draw[maleBlue, thick, dashed] (0,0) -- (0.55,0);
+  \end{tikzpicture} & Male (pronouns only)
+  & \begin{tikzpicture}[baseline=-0.4ex]
+    \draw[femalePink, thick, dashed] (0,0) -- (0.55,0);
+  \end{tikzpicture} & Female (pronouns only) \\
+\end{tabular}
 \end{frame}
 
 \begin{frame}{Conclusion and next steps}
 \begin{itemize}
   \item Replication targets were reproduced with a single-command pipeline.
-  \item Next step: implement an alternative NLP model for Table 1 (assignment extension requirement).
+  \item Next step (extension): re-estimate Table 1 using an alternative prediction model (e.g., OLS on word counts) and compare to Lasso.
 \end{itemize}
 \end{frame}
 
