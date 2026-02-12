@@ -18,7 +18,7 @@ i_test0=np.where(keys_merged['training']==0) # 25% of non-duplicate posts as tes
 i_test1=np.where(keys_merged['training'].isnull()) # duplicate posts that include both female and male classifiers; To be reclassified 
 
 # an array of unambiguous gender in the training sample 
-y_train=keys_merged.loc[i_train[0],'female'].as_matrix() 
+y_train=keys_merged.loc[i_train[0],'female'].to_numpy() 
 
 ### (2) Bring in word count matrix X
 word_counts=np.load(dir_data+"X_word_count.npz",encoding='latin1')
@@ -67,4 +67,3 @@ ypred_test1=model.predict_proba(X_test1)[:,1]
 np.savetxt(dir_lasso+"ypred_train.txt",ypred_train)
 np.savetxt(dir_lasso+"ypred_test0.txt",ypred_test0)
 np.savetxt(dir_lasso+"ypred_test1.txt",ypred_test1) 
-

@@ -69,3 +69,6 @@ Saved into this repo (via wrapper in `src/run_all.py`):
 - `output/tables/`: Table 1 and Table 2
 - `output/figures/`: Figure 1
 - `output/logs/`: logs from each pipeline step
+
+## Local compatibility patch
+- Patched deprecated pandas `as_matrix()` calls to `to_numpy()` in the upstream Lasso scripts for compatibility only; analysis logic is unchanged.
