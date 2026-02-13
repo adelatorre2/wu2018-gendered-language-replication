@@ -8,36 +8,33 @@
 \hypersetup{hidelinks,hypertexnames=false}
 
 \title{Replication of Wu (2018): Gendered Language on the Economics Job Market Rumors Forum}
-\author{Alejandro De La Torre}
+\author{Alejandro De La Torre\thanks{Replication repository: \url{https://github.com/adelatorre2/wu2018-gendered-language-replication}.}}
 \date{\today}
 
 \begin{document}
 \maketitle
 
-\section{Introduction and motivation}
-Wu (2018) analyzes how women and men are described on the Economics Job Market Rumors (EJMR) forum using a Lasso logistic model to identify words most predictive of female- versus male-referenced posts \citep{wu2018gendered}. The paper documents a pattern of female-associated language that is disproportionately about appearance and personal information, while male-associated language is more professional in tone. Replicating this result matters because it tests whether the pattern is robust in a large, noisy, anonymous forum. Replication materials and code for this project are public, and I make my full pipeline and outputs available in a GitHub repository.\footnote{\url{https://github.com/adelatorre2/wu2018-gendered-language-replication}}
+
+\section{Overview}
+\citet{wuGenderedLanguageEconomics2018} studies gendered language in anonymous posts on the Economics Job Market Rumors (EJMR) forum. The paper frames the exercise as predictive: given a post’s word usage, which terms are most informative about whether the post refers to a woman or a man? The headline takeaway is qualitative rather than purely statistical---female-referenced posts are disproportionately associated with words about appearance and personal traits, while male-referenced posts are more associated with professional roles and status.
+
+This report does three things to meet the assignment requirements. First, I locate and run the author-provided replication package and reproduce Table~1, Table~2, and Figure~1 from the published article. Second, I document the (minor) engineering work needed to run the legacy code on a modern Python/R stack, keeping the original analysis logic unchanged. Third, as a modest extension, I re-estimate the ``Table~1'' idea with two alternative prediction models (a linear probability model and a random forest) using the same underlying feature matrix and train/test split, and I compare how the resulting ``most predictive words'' lists change across models.
 
 \section{Data and replication package}
-The OpenICPSR replication package provides the raw EJMR post-level dataset, a 10,000-word vocabulary, a sparse word-count matrix, and the upstream Python and R scripts used to generate the tables and figure in the paper \citep{wu2018openicpsr}. The paper reports 2,217,046 scraped posts from October 2013 to October 2017 and 444,810 gendered posts identified by gender classifiers \citep{wu2018gendered}. The package includes:
-\begin{itemize}
-\item \texttt{gendered\_posts.csv} with post text, gender labels, and training/test splits.
-\item \texttt{X\_word\_count.npz}, a sparse matrix of word counts for the top 10,000 words.
-\item \texttt{vocab10K.csv} with the vocabulary and model outputs.
-\item \texttt{trend\_stats.csv} used for Figure 1.
-\end{itemize}
+I use the OpenICPSR replication package linked from the paper and its online appendix \citep{wuReplicationDataGendered2019,wuOnlineAppendixGendered}. The key inputs are (i) \texttt{gendered\_posts.csv} with post-level labels and split indicators, (ii) \texttt{X\_word\_count.npz}, a sparse word-count matrix for the top 10{,}000 words, (iii) \texttt{vocab10K.csv} with the vocabulary and excluded terms, and (iv) \texttt{trend\_stats.csv} for Figure~\ref{fig:figure1}. These files define the same design matrix, labels, and train/test split used by the original scripts.
 
 \section{Replication procedure}
-I built a single-command pipeline that runs the upstream Python Lasso scripts and then the upstream R script to recreate the tables and figure. The pipeline is executed with:
+I built a single-command pipeline that runs the upstream Python Lasso scripts and the upstream R script for tables and figures:
 \begin{quote}
 \texttt{python src/run\_all.py}
 \end{quote}
+The pipeline executes the two Lasso-logit programs in the raw package directory so relative paths resolve, then runs \texttt{tables-figures.R} to produce Table~\ref{tab:table1}, Table~\ref{tab:table2}, and Figure~\ref{fig:figure1}. All runs were executed on macOS arm64 in a conda environment (\texttt{wu2018}) with Python 3.11 and R + ggplot2. Logs are saved in \texttt{output/logs/}.
 
-The script runs the two Lasso logit programs in the raw package directory so the relative paths resolve correctly, then captures intermediates and logs. The Lasso scripts print the matrix shapes; for the full sample, the logged shapes are (300,788 $\times$ 9,540) for training, (99,941 $\times$ 9,540) for the held-out test set, and (44,081 $\times$ 9,540) for posts containing both genders. The pronoun sample logs analogous sizes of (139,299 $\times$ 9,540), (46,502 $\times$ 9,540), and (9,574 $\times$ 9,540). The R step uses \texttt{tables-figures.R} to produce Table 1, Table 2, and Figure 1 as CSV/PDF outputs.
+\section{Obstacles and fixes}
+Two compatibility issues required minor, non-substantive patches to the upstream code. First, deprecated pandas \texttt{as\_matrix()} calls were replaced with \texttt{to\_numpy()}. Second, NumPy now blocks loading pickled objects in \texttt{np.load} by default, so I added \texttt{allow\_pickle=True} for the sparse word-count matrix. These changes restore compatibility but do not alter analysis logic.
 
-All runs were executed on macOS arm64 under the conda environment \texttt{wu2018} with Python 3.11 and R + ggplot2. Detailed logs are saved in \texttt{output/logs/}.
-
-\section{Results}
-Table \ref{tab:table1} and Table \ref{tab:table2} reproduce the top 10 words most predictive of female- and male-referenced posts in the full and pronoun samples, respectively. The qualitative pattern matches the paper: female-associated words emphasize appearance or personal attributes, while male-associated words emphasize professional status or roles. Figure \ref{fig:figure1} reproduces the monthly fraction of posts containing top gendered words, mirroring the paper's trend plot.
+\section{Replication results}
+Table~\ref{tab:table1}, Table~\ref{tab:table2}, and Figure~\ref{fig:figure1} reproduce the original results in \citet{wuGenderedLanguageEconomics2018}. The word lists and trends match the published paper up to rounding, which is expected because I use the same data, preprocessing, splits, and upstream hyperparameters. The qualitative pattern is the same: female-associated words emphasize appearance or personal traits, while male-associated words emphasize professional roles.
 
 \begin{table}[H]
 \centering
@@ -55,28 +52,40 @@ Table \ref{tab:table1} and Table \ref{tab:table2} reproduce the top 10 words mos
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{../../output/figures/figure1.pdf}
+\includegraphics[width=0.7\linewidth]{../../output/figures/figure1.pdf}
 \caption{Fraction of female and male posts containing any of the top 50 gendered words.}
 \label{fig:figure1}
 \end{figure}
 
-\section{Modest extension: overlap across samples}
-As a small extension, I compare overlap in the top 50 positive (female-associated) and top 50 negative (male-associated) coefficients between the full-sample and pronoun-sample Lasso models. Table \ref{tab:overlap} reports overlap counts and Jaccard similarity. The overlap is moderate: 29 of 50 female-associated words and 18 of 50 male-associated words appear in both lists, suggesting that the strongest signals are fairly stable across labeling schemes while still leaving room for sampling variation.
+\section{Modest extension: alternative prediction models}
+To satisfy the assignment extension, I re-estimate the ``Table 1 idea'' using two alternative models: OLS/LPM and a Random Forest classifier. I intentionally reuse the same upstream dataset, preprocessing, and split logic as the replication package: the same design matrix $X$, the same female indicator, and the same training/test split defined by the \texttt{training} column. This keeps the comparison apples-to-apples with \citet{wuGenderedLanguageEconomics2018}. Posts with both female and male classifiers (where \texttt{training} is NA) are excluded, matching the upstream scripts. These are predictive associations in text, not causal effects; labels are classifier-driven and therefore imperfect.
+
+\subsection{OLS / Linear Probability Model (LPM)}
+The LPM is a linear baseline with easily interpretable coefficients but a misspecified probability model: predictions can fall outside $[0,1]$. I clip predictions to $[0,1]$ for threshold-based metrics and report the raw range (min $=-16.04$, max $=7.41$) to show why clipping is needed. On the held-out test set, the LPM achieves accuracy $=0.792$, precision $=0.669$, recall $=0.157$, F1 $=0.255$, and ROC-AUC $=0.734$ (AUC computed on raw scores). Table~\ref{tab:table1_ols} reports the most predictive words under this model.
 
 \begin{table}[H]
 \centering
-\input{tables/table_overlap.tex}
-\caption{Overlap of top 50 words between full-sample and pronoun-sample Lasso models.}
-\label{tab:overlap}
+\input{tables/table1_ols.tex}
+\caption{Top 10 words most predictive of female- and male-referenced posts under OLS/LPM (extension).}
+\label{tab:table1_ols}
 \end{table}
 
-\section{Obstacles and fixes}
-Two compatibility issues required small, non-substantive patches to the upstream code. First, deprecated pandas \texttt{as\_matrix()} calls were replaced with \texttt{to\_numpy()}. Second, NumPy's default behavior now blocks loading pickled objects in \texttt{np.load}, so I added \texttt{allow\_pickle=True} when reading the sparse word-count matrix. These changes only restore compatibility with modern libraries; the analysis logic is unchanged.
+\subsection{Random Forest classifier}
+The Random Forest (RF) allows nonlinear interactions that the LPM cannot capture but is less interpretable and more computationally expensive on sparse text. To keep the extension feasible, I restrict the feature set to the top 1{,}000 terms by document frequency and subsample to 20{,}000 training and 10{,}000 test observations (random seed 123). With these settings, RF achieves accuracy $=0.783$, precision $=0.571$, recall $=0.117$, F1 $=0.194$, and ROC-AUC $=0.661$. Feature importances are Gini-based and biased toward frequent terms, so I use a simple directional sign (mean difference by gender) to label ``female'' versus ``male'' words for a Table~1-style list.
+
+\begin{table}[H]
+\centering
+\input{tables/table1_rf.tex}
+\caption{Top 10 words most predictive of female- and male-referenced posts under Random Forest (extension).}
+\label{tab:table1_rf}
+\end{table}
+
+\noindent\textbf{Comparison.} Relative to Lasso-logit, the alternative models trade sparse regularization for either a simple linear baseline (LPM) or flexible nonlinear interactions (RF). The qualitative lists remain broadly similar in theme, but the RF rankings are more sensitive to feature frequency and sampling choices, which is expected for this model class.
 
 \section{Conclusion}
-The replication successfully reproduces Table 1, Table 2, and Figure 1 from Wu (2018) using the OpenICPSR package and a single-command pipeline. The extension indicates a nontrivial overlap in the most predictive words across labeling schemes, reinforcing the qualitative pattern of gendered language on EJMR. Future work could implement the assignment's alternative model requirement (e.g., random forest or linear probability model) within the same pipeline.
+The replication reproduces the main tables and figure from \citet{wuGenderedLanguageEconomics2018} using the OpenICPSR package and a single-command pipeline. I also implement two alternative models (OLS/LPM and Random Forest) on the same design matrix and split, illustrating the tradeoff between interpretability and flexibility. Overall, the extension confirms that the core descriptive pattern is robust across modeling choices, while reinforcing that these are predictive associations rather than causal claims.
 
 \bibliographystyle{plainnat}
-\bibliography{references}
+\bibliography{replication-wu}
 
 \end{document}

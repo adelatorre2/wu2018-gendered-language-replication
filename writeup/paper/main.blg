@@ -2,45 +2,49 @@ This is BibTeX, Version 0.99d (TeX Live 2025)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: plainnat.bst
-Database file #1: references.bib
-You've used 2 entries,
+Database file #1: replication-wu.bib
+Warning--empty journal in wuOnlineAppendixGendered
+Warning--empty year in wuOnlineAppendixGendered
+Warning--empty year in wuOnlineAppendixGendered
+You've used 3 entries,
             2773 wiz_defined-function locations,
-            604 strings with 5147 characters,
-and the built_in function-call counts, 745 in all, are:
-= -- 70
-> -- 20
-< -- 2
-+ -- 9
-- -- 6
-* -- 49
-:= -- 120
-add.period$ -- 8
-call.type$ -- 2
-change.case$ -- 8
-chr.to.int$ -- 1
-cite$ -- 4
-duplicate$ -- 35
-empty$ -- 72
-format.name$ -- 8
-if$ -- 152
-int.to.chr$ -- 2
+            612 strings with 5447 characters,
+and the built_in function-call counts, 1029 in all, are:
+= -- 90
+> -- 30
+< -- 3
++ -- 12
+- -- 9
+* -- 67
+:= -- 163
+add.period$ -- 9
+call.type$ -- 3
+change.case$ -- 12
+chr.to.int$ -- 3
+cite$ -- 9
+duplicate$ -- 54
+empty$ -- 102
+format.name$ -- 12
+if$ -- 208
+int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 1
-newline$ -- 20
-num.names$ -- 8
-pop$ -- 17
+missing$ -- 2
+newline$ -- 23
+num.names$ -- 12
+pop$ -- 33
 preamble$ -- 1
-purify$ -- 6
+purify$ -- 9
 quote$ -- 0
-skip$ -- 24
+skip$ -- 36
 stack$ -- 0
-substring$ -- 29
+substring$ -- 31
 swap$ -- 4
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 22
-warning$ -- 0
-while$ -- 8
+type$ -- 33
+warning$ -- 3
+while$ -- 11
 width$ -- 0
-write$ -- 36
+write$ -- 43
+(There were 3 warnings)
