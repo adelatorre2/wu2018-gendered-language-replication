@@ -62,7 +62,7 @@ Saved into this repo (via wrapper in `src/run_all.py`):
 - `output/figures/figure1.pdf`
 
 ### Note on the linear Lasso script
-`lasso/lasso-linear-pronoun-sample.py` is included in the raw package but is not run in the default pipeline because it uses a linear model for appendix figures and requires small fixes to run in modern scikit-learn.
+`lasso/lasso-linear-pronoun-sample.py` is included in the raw package but is not run in the default pipeline because it uses a linear model for appendix figures and requires small fixes to run in modern (Feb 2026) scikit-learn.
 
 ## Repo output layout
 - `output/intermediate/`: copied Lasso intermediates

@@ -31,6 +31,16 @@ Outputs are written to:
 - `output/figures/`
 - `output/logs/`
 
+## Extension (alternative models)
+Run the extension models that re-create the \"Table 1\" idea with OLS/LPM and Random Forest:
+
+```bash
+python -m src.extension.fit_extension --model all
+```
+
+Outputs are written to `output/extension/ols/` and `output/extension/rf/`.
+See `src/extension/README_extension.md` for details and options.
+
 ## Compatibility patches
 Upstream scripts required minor compatibility fixes for modern pandas and NumPy. These do not change analysis logic:
 - `as_matrix()` \u2192 `to_numpy()`
