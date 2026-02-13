@@ -1,0 +1,16 @@
+{
+  "accuracy": 0.7922874495952612,
+  "f1": 0.2546407669383505,
+  "model_name": "ols_lpm",
+  "n_features": 9540,
+  "n_test": 99941,
+  "n_train": 300788,
+  "notes": "LPM predictions are unbounded; we clip to [0,1] for threshold-based metrics. AUC uses raw scores for ranking.",
+  "precision": 0.6690566037735849,
+  "raw_pred_max": 7.405668063819358,
+  "raw_pred_min": -16.038919846045843,
+  "recall": 0.15724358121591062,
+  "roc_auc": 0.7343407198496691,
+  "split_description": "Upstream training==1 vs training==0 (non-duplicate posts only)",
+  "threshold": 0.5
+}
