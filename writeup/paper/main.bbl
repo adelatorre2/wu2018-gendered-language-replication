@@ -1,23 +1,21 @@
-\begin{thebibliography}{3}
-\providecommand{\natexlab}[1]{#1}
-\providecommand{\url}[1]{\texttt{#1}}
-\expandafter\ifx\csname urlstyle\endcsname\relax
-  \providecommand{\doi}[1]{doi: #1}\else
-  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+\begin{thebibliography}{}
 
-\bibitem[Wu()]{wuOnlineAppendixGendered}
-Alice~H Wu.
+\bibitem[\protect\citeauthoryear{Wu}{Wu}{}]{wuOnlineAppendixGendered}
+Wu, A.~H.
 \newblock Online {{Appendix}} to ``{{Gendered Language}} on the {{Economics Job Market Rumors Forum}}''.
 
-\bibitem[Wu(2018)]{wuGenderedLanguageEconomics2018}
-Alice~H. Wu.
+\bibitem[\protect\citeauthoryear{Wu}{Wu}{2018}]{wuGenderedLanguageEconomics2018}
+Wu, A.~H. (2018, May).
 \newblock Gendered {{Language}} on the {{Economics Job Market Rumors Forum}}.
-\newblock \emph{AEA Papers and Proceedings}, 108:\penalty0 175--179, May 2018.
-\newblock ISSN 2574-0768, 2574-0776.
-\newblock \doi{10.1257/pandp.20181101}.
+\newblock {\em AEA Papers and Proceedings\/}~{\em 108}, 175--179.
 
-\bibitem[Wu(2019)]{wuReplicationDataGendered2019}
-Alice~H. Wu.
-\newblock Replication data for: {{Gendered Language}} on the {{Economics Job Market Rumors Forum}}, October 2019.
+\bibitem[\protect\citeauthoryear{Wu}{Wu}{2019}]{wuReplicationDataGendered2019}
+Wu, A.~H. (2019, October).
+\newblock Replication data for: {{Gendered Language}} on the {{Economics Job Market Rumors Forum}}.
+
+\bibitem[\protect\citeauthoryear{Wu}{Wu}{2020}]{wuGenderBiasProfessionals2020}
+Wu, A.~H. (2020, December).
+\newblock Gender {{Bias}} among {{Professionals}}: {{An Identity-Based Interpretation}}.
+\newblock {\em The Review of Economics and Statistics\/}~{\em 102\/}(5), 867--880.
 
 \end{thebibliography}

@@ -1,50 +1,51 @@
 This is BibTeX, Version 0.99d (TeX Live 2025)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
-The style file: plainnat.bst
+The style file: chicago.bst
 Database file #1: replication-wu.bib
-Warning--empty journal in wuOnlineAppendixGendered
 Warning--empty year in wuOnlineAppendixGendered
-Warning--empty year in wuOnlineAppendixGendered
-You've used 3 entries,
-            2773 wiz_defined-function locations,
-            612 strings with 5447 characters,
-and the built_in function-call counts, 1029 in all, are:
-= -- 90
-> -- 30
-< -- 3
-+ -- 12
-- -- 9
-* -- 67
-:= -- 163
-add.period$ -- 9
-call.type$ -- 3
-change.case$ -- 12
-chr.to.int$ -- 3
-cite$ -- 9
-duplicate$ -- 54
-empty$ -- 102
-format.name$ -- 12
-if$ -- 208
+Warning--no journal in wuOnlineAppendixGendered
+Warning--no number and no volume in wuOnlineAppendixGendered
+Warning--page numbers missing in wuOnlineAppendixGendered
+You've used 4 entries,
+            2861 wiz_defined-function locations,
+            637 strings with 5602 characters,
+and the built_in function-call counts, 2114 in all, are:
+= -- 182
+> -- 104
+< -- 0
++ -- 24
+- -- 40
+* -- 155
+:= -- 406
+add.period$ -- 10
+call.type$ -- 4
+change.case$ -- 24
+chr.to.int$ -- 4
+cite$ -- 8
+duplicate$ -- 65
+empty$ -- 151
+format.name$ -- 40
+if$ -- 372
 int.to.chr$ -- 1
-int.to.str$ -- 1
-missing$ -- 2
-newline$ -- 23
-num.names$ -- 12
-pop$ -- 33
+int.to.str$ -- 0
+missing$ -- 3
+newline$ -- 21
+num.names$ -- 40
+pop$ -- 23
 preamble$ -- 1
-purify$ -- 9
+purify$ -- 48
 quote$ -- 0
-skip$ -- 36
+skip$ -- 61
 stack$ -- 0
-substring$ -- 31
-swap$ -- 4
+substring$ -- 130
+swap$ -- 20
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 33
-warning$ -- 3
-while$ -- 11
+type$ -- 80
+warning$ -- 4
+while$ -- 44
 width$ -- 0
-write$ -- 43
-(There were 3 warnings)
+write$ -- 49
+(There were 4 warnings)

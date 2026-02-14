@@ -8,33 +8,39 @@
 \hypersetup{hidelinks,hypertexnames=false}
 
 \title{Replication of Wu (2018): Gendered Language on the Economics Job Market Rumors Forum}
-\author{Alejandro De La Torre\thanks{Replication repository: \url{https://github.com/adelatorre2/wu2018-gendered-language-replication}.}}
+\author{Alejandro De La Torre
+\thanks{Replication repository: \href{https://github.com/adelatorre2/wu2018-gendered-language-replication}{\texttt{github.com/adelatorre2/wu2018-gendered-language-replication}}.}}
 \date{\today}
 
 \begin{document}
 \maketitle
 
-
 \section{Overview}
-\citet{wuGenderedLanguageEconomics2018} studies gendered language in anonymous posts on the Economics Job Market Rumors (EJMR) forum. The paper frames the exercise as predictive: given a post’s word usage, which terms are most informative about whether the post refers to a woman or a man? The headline takeaway is qualitative rather than purely statistical---female-referenced posts are disproportionately associated with words about appearance and personal traits, while male-referenced posts are more associated with professional roles and status.
+\citet{wuGenderedLanguageEconomics2018} studies gendered language in anonymous posts on the Economics Job Market Rumors (EJMR) forum. The paper frames the exercise as predictive: given a post’s word usage, which terms are most informative about whether the post refers to a woman or a man? The headline takeaway is qualitative rather than purely statistical—female-referenced posts are disproportionately associated with words about appearance and personal traits, while male-referenced posts are more associated with professional roles and status.
 
-This report does three things to meet the assignment requirements. First, I locate and run the author-provided replication package and reproduce Table~1, Table~2, and Figure~1 from the published article. Second, I document the (minor) engineering work needed to run the legacy code on a modern Python/R stack, keeping the original analysis logic unchanged. Third, as a modest extension, I re-estimate the ``Table~1'' idea with two alternative prediction models (a linear probability model and a random forest) using the same underlying feature matrix and train/test split, and I compare how the resulting ``most predictive words'' lists change across models.
+This report meets the assignment requirements in three steps. First, I locate and run the author-provided replication package and reproduce Table~1, Table~2, and Figure~1 from the published article. Second, I document the engineering work required to run the archived code on a modern Python/R stack, without altering the original analysis logic. Third, I implement a modest extension by re-estimating the core predictive exercise using alternative models and assessing how sensitive the ranked word lists are to modeling choices.
 
-\section{Data and replication package}
+\section{Replication}
+
+\subsection{Data and replication package}
 I use the OpenICPSR replication package linked from the paper and its online appendix \citep{wuReplicationDataGendered2019,wuOnlineAppendixGendered}. The key inputs are (i) \texttt{gendered\_posts.csv} with post-level labels and split indicators, (ii) \texttt{X\_word\_count.npz}, a sparse word-count matrix for the top 10{,}000 words, (iii) \texttt{vocab10K.csv} with the vocabulary and excluded terms, and (iv) \texttt{trend\_stats.csv} for Figure~\ref{fig:figure1}. These files define the same design matrix, labels, and train/test split used by the original scripts.
 
-\section{Replication procedure}
+\subsection{Replication procedure}
 I built a single-command pipeline that runs the upstream Python Lasso scripts and the upstream R script for tables and figures:
 \begin{quote}
 \texttt{python src/run\_all.py}
 \end{quote}
 The pipeline executes the two Lasso-logit programs in the raw package directory so relative paths resolve, then runs \texttt{tables-figures.R} to produce Table~\ref{tab:table1}, Table~\ref{tab:table2}, and Figure~\ref{fig:figure1}. All runs were executed on macOS arm64 in a conda environment (\texttt{wu2018}) with Python 3.11 and R + ggplot2. Logs are saved in \texttt{output/logs/}.
 
-\section{Obstacles and fixes}
-Two compatibility issues required minor, non-substantive patches to the upstream code. First, deprecated pandas \texttt{as\_matrix()} calls were replaced with \texttt{to\_numpy()}. Second, NumPy now blocks loading pickled objects in \texttt{np.load} by default, so I added \texttt{allow\_pickle=True} for the sparse word-count matrix. These changes restore compatibility but do not alter analysis logic.
+Conceptually, this mirrors the original workflow: estimate a Lasso-logit model of the female indicator on a high-dimensional word-count matrix, select the penalty via cross-validation, and rank words by their marginal effect on predicted probabilities. I do not modify the estimation routine, feature construction, or split logic; the aim is computational fidelity.
 
-\section{Replication results}
-Table~\ref{tab:table1}, Table~\ref{tab:table2}, and Figure~\ref{fig:figure1} reproduce the original results in \citet{wuGenderedLanguageEconomics2018}. The word lists and trends match the published paper up to rounding, which is expected because I use the same data, preprocessing, splits, and upstream hyperparameters. The qualitative pattern is the same: female-associated words emphasize appearance or personal traits, while male-associated words emphasize professional roles.
+\subsection{Obstacles and fixes}
+Two compatibility issues required minor, non-substantive patches. First, deprecated pandas \texttt{as\_matrix()} calls were replaced with \texttt{to\_numpy()}. Second, NumPy now blocks loading pickled objects in \texttt{np.load} by default, so I added \texttt{allow\_pickle=True} for the sparse word-count matrix. These changes restore compatibility but do not alter analysis logic.
+
+\section{Results}
+Table~\ref{tab:table1}, Table~\ref{tab:table2}, and Figure~\ref{fig:figure1} reproduce the original results in \citet{wuGenderedLanguageEconomics2018}. The word lists and trends match the published paper up to rounding, which is expected because I use the same data, preprocessing, splits, and hyperparameters. Because the replication package fixes the design matrix, split indicators, and estimation routine, exact agreement up to rounding is expected when running the archived code on the same dataset. The qualitative pattern is identical: female-associated words emphasize appearance or personal traits, while male-associated words emphasize professional roles.
+
+The mechanical equivalence of these results reflects the fact that the same design matrix, split, and random seeds are used. The value of the replication lies not in reinterpreting the estimates, but in verifying that the archived materials regenerate the published objects in a modern computing environment.
 
 \begin{table}[H]
 \centering
@@ -57,35 +63,54 @@ Table~\ref{tab:table1}, Table~\ref{tab:table2}, and Figure~\ref{fig:figure1} rep
 \label{fig:figure1}
 \end{figure}
 
-\section{Modest extension: alternative prediction models}
-To satisfy the assignment extension, I re-estimate the ``Table 1 idea'' using two alternative models: OLS/LPM and a Random Forest classifier. I intentionally reuse the same upstream dataset, preprocessing, and split logic as the replication package: the same design matrix $X$, the same female indicator, and the same training/test split defined by the \texttt{training} column. This keeps the comparison apples-to-apples with \citet{wuGenderedLanguageEconomics2018}. Posts with both female and male classifiers (where \texttt{training} is NA) are excluded, matching the upstream scripts. These are predictive associations in text, not causal effects; labels are classifier-driven and therefore imperfect.
+Figure~\ref{fig:figure1} reproduces the time-series pattern documented in the paper: posts containing the top gender-predictive words differ systematically by referenced gender, and the gap persists over time.
 
-\subsection{OLS / Linear Probability Model (LPM)}
-The LPM is a linear baseline with easily interpretable coefficients but a misspecified probability model: predictions can fall outside $[0,1]$. I clip predictions to $[0,1]$ for threshold-based metrics and report the raw range (min $=-16.04$, max $=7.41$) to show why clipping is needed. On the held-out test set, the LPM achieves accuracy $=0.792$, precision $=0.669$, recall $=0.157$, F1 $=0.255$, and ROC-AUC $=0.734$ (AUC computed on raw scores). Table~\ref{tab:table1_ols} reports the most predictive words under this model.
 
-\begin{table}[H]
-\centering
-\input{tables/table1_ols.tex}
-\caption{Top 10 words most predictive of female- and male-referenced posts under OLS/LPM (extension).}
-\label{tab:table1_ols}
-\end{table}
+\section{Modest extension}
 
-\subsection{Random Forest classifier}
-The Random Forest (RF) allows nonlinear interactions that the LPM cannot capture but is less interpretable and more computationally expensive on sparse text. To keep the extension feasible, I restrict the feature set to the top 1{,}000 terms by document frequency and subsample to 20{,}000 training and 10{,}000 test observations (random seed 123). With these settings, RF achieves accuracy $=0.783$, precision $=0.571$, recall $=0.117$, F1 $=0.194$, and ROC-AUC $=0.661$. Feature importances are Gini-based and biased toward frequent terms, so I use a simple directional sign (mean difference by gender) to label ``female'' versus ``male'' words for a Table~1-style list.
+The assignment requires a modest extension beyond mechanical replication. Rather than altering the data or redefining the labeling strategy, I focus on the core predictive exercise underlying Table~\ref{tab:table1}: how sensitive are the ranked word lists to the choice of model? Concretely, I re-estimate the female-indicator prediction problem using two alternative approaches while holding fixed the original design matrix, training/test split, and vocabulary. By keeping the data environment identical to the replication, any differences in results can be attributed to modeling choices rather than preprocessing decisions.
 
-\begin{table}[H]
-\centering
-\input{tables/table1_rf.tex}
-\caption{Top 10 words most predictive of female- and male-referenced posts under Random Forest (extension).}
-\label{tab:table1_rf}
-\end{table}
+This extension is intentionally conservative. The goal is not to “improve” on the original paper, but to assess whether its qualitative conclusions depend heavily on the specific use of Lasso-logit.
 
-\noindent\textbf{Comparison.} Relative to Lasso-logit, the alternative models trade sparse regularization for either a simple linear baseline (LPM) or flexible nonlinear interactions (RF). The qualitative lists remain broadly similar in theme, but the RF rankings are more sensitive to feature frequency and sampling choices, which is expected for this model class.
+\subsection{Methodological setup}
+
+The original analysis uses a Lasso-logit model estimated on a 10,000-word sparse matrix. Lasso is well suited to high-dimensional text data: it performs regularization, selects a sparse set of predictors, and yields coefficients that can be directly ranked and interpreted. This makes it particularly aligned with the descriptive aim of the paper, which is to identify which words are most predictive of gender reference.
+
+I implement two alternative models.
+
+First, I estimate a Linear Probability Model (LPM) using OLS. The dependent variable is the same female indicator, and the regressors are the identical word-count features used in the Lasso specification. The appeal of the LPM is transparency: coefficients can be interpreted as linear changes in predicted probability associated with marginal changes in word usage. Although fitted values can fall outside the unit interval, this does not affect coefficient interpretation, and for classification metrics I clip predictions to $[0,1]$ while computing ROC-AUC using raw scores. This model serves as a simple, easily interpretable benchmark.
+
+Second, I estimate a Random Forest classifier (Breiman, 2001). The motivation is to allow nonlinearities and interactions across words that a linear model cannot capture. Because the full 10,000-word feature space is computationally intensive for tree-based methods, I restrict the feature set to the 1,000 most frequent words and subsample the training and test sets for feasibility (holding a fixed random seed for reproducibility). Variable importance is measured using Gini importance, and directionality is inferred from mean usage differences between classes.
+
+Together, these models span a spectrum: LPM emphasizes interpretability without regularization, Random Forest emphasizes flexibility with reduced interpretability, and Lasso-logit balances sparsity and interpretability in high dimensions.
+
+\subsection{Results}
+
+The LPM delivers out-of-sample performance that is broadly comparable to the Lasso benchmark. Test-set accuracy is 0.792, with ROC-AUC of 0.734. Precision is relatively high while recall remains low, reflecting the class imbalance and the conservative thresholding common in sparse text classification. Most importantly, the highest-ranked words by absolute coefficient magnitude remain thematically similar to those in Table~\ref{tab:table1}: appearance- and personal-trait-related terms are most predictive of female-referenced posts, while professional-role and status terms are most predictive of male-referenced posts. 
+
+The Random Forest produces slightly lower ROC-AUC (0.661) and similar accuracy (0.783), with more variation in precision and recall. Because the RF is fit on a reduced feature space (top 1,000 words) and subsamples for feasibility, its ranked list is intended for qualitative comparison rather than a one-for-one match to the 10,000-word Lasso ranking. Rankings of “important” words are somewhat more sensitive to feature frequency and sampling. Nevertheless, the broad qualitative pattern persists. Even when allowing nonlinear splits and interactions, the dominant predictors cluster around the same thematic categories documented in the original paper.
+
+In this sense, the extension reinforces rather than overturns the main descriptive finding: the association between gender reference and the type of language used is not an artifact of a single linear-regularized specification.
+
+\subsection{Interpretation and limitations}
+
+This extension remains predictive, not causal. The dependent variable is itself generated by gender-classification rules, and any misclassification propagates through all models. The LPM ignores heteroskedasticity inherent in binary outcomes, and the Random Forest requires feature restriction and subsampling, introducing additional researcher discretion. Moreover, Gini importance is known to favor more frequent predictors, which may bias importance rankings toward common words.
+
+From this, it makes sense why \citet{wuGenderedLanguageEconomics2018} relied on Lasso-logit. In high-dimensional sparse settings, Lasso provides a disciplined and transparent method for variable selection while preserving interpretability of coefficient rankings. More flexible models introduce additional complexity and tuning decisions without materially changing the qualitative conclusions.
+
+Accordingly, this goes to show the robustness of the paper’s central descriptive claim while illustrating the tradeoffs between interpretability, flexibility, and regularization in text-based prediction exercises. I will also note that his extension does not pursue a structural interpretation of bias, it relates indirectly to subsequent work such as \citet{wuGenderBiasProfessionals2020}, which develops an identity-based interpretation of gender bias among professionals. The credibility of such interpretive advances rests in part on the stability of the underlying descriptive patterns. By showing that the core gender-language associations are not highly sensitive to modeling choice, this exercise reinforces the empirical foundation upon which later theoretical and interpretive contributions are built.
 
 \section{Conclusion}
-The replication reproduces the main tables and figure from \citet{wuGenderedLanguageEconomics2018} using the OpenICPSR package and a single-command pipeline. I also implement two alternative models (OLS/LPM and Random Forest) on the same design matrix and split, illustrating the tradeoff between interpretability and flexibility. Overall, the extension confirms that the core descriptive pattern is robust across modeling choices, while reinforcing that these are predictive associations rather than causal claims.
+This replication exercise underscores how much of empirical credibility rests not only on statistical technique, but on transparency of process. I was fortunate to work with a recent paper accompanied by a thorough and carefully documented replication package. Because the data, scripts, and intermediate objects were clearly organized, reproducing Table~\ref{tab:table1}, Table~\ref{tab:table2}, and Figure~\ref{fig:figure1} required only minor updates to accommodate software deprecations. The fact that these updates were small—and did not alter the analytical logic—speaks to the durability of well-documented computational research.
 
-\bibliographystyle{plainnat}
+The experience also highlights why \citet{wuGenderedLanguageEconomics2018} has had such influence. The paper itself is concise, but every empirical claim is tightly linked to transparent modeling choices, and the accompanying appendix and code anticipate many natural questions a reader might raise. This combination of clarity, reproducibility, and methodological discipline strengthens the persuasive force of the results. It also helps explain why subsequent work in this literature builds directly on Wu’s findings: other researchers can verify, extend, and interrogate the analysis rather than treating it as a black box.
+
+More broadly, this project reinforces a professional lesson. Replication packages are not peripheral add-ons; they are integral to modern empirical economics. They allow others to “show the work,” audit decisions, and distinguish substantive findings from artifacts of implementation. As I develop my own research, I aim to document design choices, preprocessing steps, and modeling decisions with similar care. Doing so not only improves external credibility but sharpens one’s own thinking about identification, measurement, and robustness.
+
+At the same time, the relative ease of replicating a recent paper makes me more aware of the fragility of older empirical work that lacks accessible data or code. Revisiting, updating, and stress-testing such papers may be a productive avenue for early-career researchers. Replication, in this sense, is not merely a pedagogical exercise but a mechanism for cumulative knowledge. This project therefore serves both as confirmation of Wu’s central descriptive finding and as a reminder that rigorous, well-documented empirical practice is itself a substantive contribution to the discipline. In short, when I grow up, I want to be like Professor Wu.
+
+\newpage
+\bibliographystyle{chicago}
 \bibliography{replication-wu}
 
 \end{document}

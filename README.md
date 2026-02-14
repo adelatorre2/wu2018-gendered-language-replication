@@ -1,6 +1,6 @@
 # Wu (2018) Gendered Language Replication
 
-## How to run
+## How to reproduce (full pipeline)
 1. Create the conda environment.
 
 ```bash
@@ -19,7 +19,7 @@ conda install -c conda-forge r-base r-ggplot2
 
 The folder should contain `gendered_posts.csv`, `X_word_count.npz`, `vocab10K.csv`, `trend_stats.csv`, `tables-figures.R`, and `lasso/`.
 
-4. Run the full replication pipeline.
+4. Run the full replication pipeline (Tables 1–2 and Figure 1).
 
 ```bash
 python src/run_all.py
@@ -32,14 +32,32 @@ Outputs are written to:
 - `output/logs/`
 
 ## Extension (alternative models)
-Run the extension models that re-create the \"Table 1\" idea with OLS/LPM and Random Forest:
+The extension re-does the “Table 1” idea using two alternative models:
+- OLS / Linear Probability Model (LPM)
+- Random Forest classifier (with feature reduction + subsampling for feasibility)
+
+Run both:
 
 ```bash
 python -m src.extension.fit_extension --model all
 ```
 
-Outputs are written to `output/extension/ols/` and `output/extension/rf/`.
-See `src/extension/README_extension.md` for details and options.
+Or run them separately:
+
+```bash
+python -m src.extension.fit_extension --model ols
+python -m src.extension.fit_extension --model rf
+```
+
+Outputs are written to:
+- `output/extension/ols/` (metrics + `table1_ols.csv` / `table1_ols.tex`)
+- `output/extension/rf/` (metrics + `table1_rf.csv` / `table1_rf.tex`)
+
+Notes:
+- The extension **reuses the same data, feature construction, and split logic** as the replication package.
+- RF is trained on the top-K most frequent words and subsamples rows; adjust via `--rf-max-features`, `--rf-max-train`, `--rf-max-test`.
+
+See `src/extension/README_extension.md` and `src/extension/NOTES_methodology.md` for details.
 
 ## Compatibility patches
 Upstream scripts required minor compatibility fixes for modern pandas and NumPy. These do not change analysis logic:
